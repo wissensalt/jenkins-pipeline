@@ -15,11 +15,18 @@ pipeline {
                 echo "Building release ${RELEASE} with log level ${LOG_LEVEL}"
             }
         }
+
+        stage ('Test') {
+            echo "Testing Release ${RELEASE}"
+        }
+
         stage ('Deploy') {
-            input message 'Sure to deploy ?'
-            ok 'Do it !'
-            parameters {
-                string(name: 'TARGET_ENVIRONMENT', defaultValue: 'PROD', description: 'Target deployment environment')
+            input {
+                message 'Sure to deploy ?'
+                ok 'Do it !'
+                parameters {
+                    string(name: 'TARGET_ENVIRONMENT', defaultValue: 'PROD', description: 'Target deployment environment')
+                }
             }
             steps {
                 echo "Deploying relase ${RELEASE} to environment ${TARGET_ENVIRONMENT}"
