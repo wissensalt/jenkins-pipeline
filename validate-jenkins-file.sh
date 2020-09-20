@@ -1,0 +1,1 @@
+curl --user admin:password -X POST -F "jenkinsfile=<shared-library-pipeline.groovy" http://localhost:8080/pipeline-model-converter/validate
