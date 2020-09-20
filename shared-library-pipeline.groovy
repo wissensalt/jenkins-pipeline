@@ -25,7 +25,8 @@ pipeline {
             }
 
             steps {
-                echo "Building version : ${VERSION} with suffix ${VERSION_SUFFIX}"
+                echo "Building version : ${VERSION} with suffix : ${VERSION_SUFFIX}"
+                echo "Building version : ${VERSION} with suffix 2 : ${VERSION_SUFFIX}"
             }
         }
 
