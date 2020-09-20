@@ -20,7 +20,7 @@ pipeline {
             environment {
                 VERSION_SUFFIX = getVersionSuffix()
             }
-            
+
             steps {
                 echo "Building version : ${VERSION} with suffix ${VERSION_SUFFIX}"
             }
@@ -49,7 +49,7 @@ String getVersionSuffix() {
         return env.VERSION_RC
     }
 
-    return env.VERSION_RC + 'ci.' + env.BUILD_NUMBER
+    return env.VERSION_RC + ' ci. ' + env.BUILD_NUMBER
 }
 
 void auditTools() {
