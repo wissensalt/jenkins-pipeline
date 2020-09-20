@@ -17,31 +17,30 @@ pipeline {
                     git version
                     docker version
                 '''
+            }            
+        }
+        stage('Build') {
+            environment {
+                VERSION_SUFFIX = "${sh(script: 'if [ "${RC}" == "false" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)}"
             }
-
-            stage('Build') {
-                environment {
-                    VERSION_SUFFIX = "${sh(script: 'if [ "${RC}" == "false" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)}"
-                }
-                steps {
-                    echo "Building version : ${VERSION} with suffix ${VERSION_SUFFIX}"
-                }
+            steps {
+                echo "Building version : ${VERSION} with suffix ${VERSION_SUFFIX}"
             }
+        }
 
-            stage('Test') {
-                steps {
+        stage('Test') {
+            steps {
                     echo 'Conduct Testing'
                 }
+        }
+
+        stage('Publish') {
+            when {
+                expression { return params.RC }
             }
 
-            stage('Publish') {
-                when {
-                    expression { return params.RC }
-                }
-
-                steps {
-                    echo "Complete Published"
-                }
+            steps {
+                echo "Complete Published"
             }
         }
     }
