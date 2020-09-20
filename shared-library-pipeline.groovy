@@ -20,7 +20,7 @@ pipeline {
         }
         stage('Build') {
             environment {
-                VERSION_SUFFIX = getVersionSuffix()
+                VERSION_SUFFIX = versionSuffix()
             }
 
             steps {
