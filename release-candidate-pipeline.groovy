@@ -15,7 +15,6 @@ pipeline {
             steps {
                 sh '''
                     git version
-                    docker version
                 '''
             }            
         }
