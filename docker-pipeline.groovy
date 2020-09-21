@@ -21,7 +21,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'dotnet build '
+                sh 'mongod --version'
             }
         }
     }
