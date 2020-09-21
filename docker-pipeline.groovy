@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'mcr.microsoft.com/dotnet/code/sdk:3.1.101'
+            image 'mongo:latest'
         }
     }
 
@@ -10,8 +10,8 @@ pipeline {
             steps {
                 echo 'docker version'
                 sh '''
-                    dotnet --list-sdks
-                    dotnet --list-runtimes
+                    docker image ls
+                    docker container ls --all
                 '''
 
                 sh 'printenv'
