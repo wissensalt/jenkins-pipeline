@@ -17,19 +17,20 @@ pipeline {
         }
 
         stage ('Build') {
+            agent {
+                docker {
+                    reuseNode true
+                    image 'maven:3-alpine'
+                    args '-v $HOME/.m2:/root/.m2 -u 0:0'
+                }
+            }
+            
             environment {
                 VERSION_SUFFIX = versionSuffix()
                 VERSION_SUFFIX2 = versionSuffix2 rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
             }
 
             steps {
-                agent {
-                    docker {
-                        image 'maven:3-alpine' 
-                        args '-v /root/.m2:/root/.m2' 
-                    }
-                }
-
                 echo "Building version ${VERSION} with SUFFIX ${VERSION_SUFFIX}"                
 
                 sh 'mkdir -p boot-project'
