@@ -2,12 +2,7 @@ library identifier: 'jenkins-pipeline-library@develop',
         retriever: modernSCM([$class: 'GitSCMSource', remote: 'https://github.com/wissensalt/jenkins-pipeline-library.git'])
 
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine' 
-            args '-v /root/.m2:/root/.m2' 
-        }
-    }
+    agent any
 
     environment {
         VERSION = "1.0.0"
@@ -28,6 +23,13 @@ pipeline {
             }
 
             steps {
+                agent {
+                    docker {
+                        image 'maven:3-alpine' 
+                        args '-v /root/.m2:/root/.m2' 
+                    }
+                }
+
                 echo "Building version ${VERSION} with SUFFIX ${VERSION_SUFFIX}"                
 
                 sh 'mkdir -p boot-project'
