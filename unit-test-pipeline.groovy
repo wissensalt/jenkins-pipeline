@@ -2,7 +2,12 @@ library identifier: 'jenkins-pipeline-library@develop',
         retriever: modernSCM([$class: 'GitSCMSource', remote: 'https://github.com/wissensalt/jenkins-pipeline-library.git'])
 
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3-alpine' 
+            args '-v /root/.m2:/root/.m2' 
+        }
+    }
 
     environment {
         VERSION = "1.0.0"
@@ -37,6 +42,8 @@ pipeline {
 
                         chmod +x build.sh
                         chmod +x run.sh
+
+                        
 
                         ./build.sh
                         ./run.sh
