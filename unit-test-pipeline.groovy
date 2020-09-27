@@ -31,15 +31,10 @@ pipeline {
                     credentialsId: '4b2b3bb7-b857-49e5-96bb-583e77230828',
                     url: 'https://github.com/wissensalt/readable-mess-word'
 
-                    sh 'pwd'
-                    sh 'ls -l'                    
-                }
-
-                dir('${env.WORKSPACE}/boot-project/readable-mess-word') {
                     sh '''
                         pwd
                         ls -l
-                        
+
                         chmod +x build.sh
                         chmod +x run.sh
 
