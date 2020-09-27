@@ -16,7 +16,7 @@ pipeline {
             }
         }
 
-        stage ('Build') {
+        stage ('Package') {
             agent {
                 docker {
                     reuseNode true
@@ -24,15 +24,8 @@ pipeline {
                     args '-v $HOME/.m2:/root/.m2 -u 0:0'
                 }
             }
-            
-            environment {
-                VERSION_SUFFIX = versionSuffix()
-                VERSION_SUFFIX2 = versionSuffix2 rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
-            }
 
             steps {
-                echo "Building version ${VERSION} with SUFFIX ${VERSION_SUFFIX}"                
-
                 sh 'mkdir -p boot-project'
                 dir('boot-project') {
                     git branch: 'master',
@@ -43,10 +36,28 @@ pipeline {
                         pwd
                         ls -l
 
-                        chmod +x build.sh
-                        chmod +x run.sh
+                        mvn clean package
+                    '''
+                }
+            }
+        }
 
-                        
+        stage ('Build') {
+            environment {
+                VERSION_SUFFIX = versionSuffix()
+                VERSION_SUFFIX2 = versionSuffix2 rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
+            }
+
+            steps {
+                echo "Building version ${VERSION} with SUFFIX ${VERSION_SUFFIX}"                
+            
+                dir('boot-project') {
+                    sh '''
+                        pwd
+                        ls -l
+
+                        chmod +x build.sh
+                        chmod +x run.sh                    
 
                         ./build.sh
                         ./run.sh
