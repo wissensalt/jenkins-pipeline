@@ -3,7 +3,7 @@ library identifier: 'jenkins-pipeline-library@develop',
 
 pipeline {
     agent any
-    
+
     environment {
         VERSION = "1.0.0"
         VERSION_RC = "RC.2"
@@ -32,14 +32,15 @@ pipeline {
                     url: 'https://github.com/wissensalt/readable-mess-word'
                 }
 
-                sh '''
-                    cd boot-project/readable-mess-word
-                    chmod +x build.sh
-                    chmod +x run.sh
+                dir('boot-project/readable-mess-word') {
+                    sh '''
+                        chmod +x build.sh
+                        chmod +x run.sh
 
-                    ./build.sh
-                    ./run.sh
-                '''
+                        ./build.sh
+                        ./run.sh
+                    '''
+                }
             }    
         }        
 
