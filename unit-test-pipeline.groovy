@@ -16,7 +16,12 @@ pipeline {
             }
         }
 
-        stage ('Package') {
+        stage ('Build and Run') {
+            environment {
+                VERSION_SUFFIX = versionSuffix()
+                VERSION_SUFFIX2 = versionSuffix2 rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
+            }
+
             agent {
                 docker {
                     reuseNode true
@@ -26,8 +31,9 @@ pipeline {
             }
 
             steps {
+                echo "Building version ${VERSION} with SUFFIX ${VERSION_SUFFIX}"
+
                 sh '''
-                    su jenkins
                     mkdir -p boot-project
                 '''
                 dir('boot-project') {
@@ -39,51 +45,24 @@ pipeline {
                         ls -l
 
                         mvn clean package
+
+                        chmod +x build.sh
+                        ./build.sh
+
+                        chmod +x run.sh                    
+                        ./run.sh
+
+                        mstest testResultFile:"**/*.trx", keepLongStdio: true
                     '''
                 }
             }
         }
+    }
 
-        stage ('Build and Test') {
-            environment {
-                VERSION_SUFFIX = versionSuffix()
-                VERSION_SUFFIX2 = versionSuffix2 rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
-            }
-
-            steps {
-                echo "Building version ${VERSION} with SUFFIX ${VERSION_SUFFIX}"                
-            
-                dir('boot-project') {
-                    sh '''
-                        pwd
-                        ls -l
-
-                        chmod +x build.sh
-                        ./build.sh
-                    '''
-                }
-            }    
-        }        
-
-        stage ('Run') {
-            agent {
-                docker {
-                    reuseNode true
-                    image 'maven:3-alpine'
-                    args '-v $HOME/.m2:/root/.m2 -u 0:0'
-                }
-            }
-            
-            steps {
-                dir('boot-project') {
-                    sh '''                    
-                        chmod +x run.sh                    
-                        ./run.sh
-                    '''
-                }
-
-                mstest testResultFile:"**/*.trx", keepLongStdio: true
-            }
+    post {
+        always {
+            archive "target/**/*"
+            junit 'target/surefire-reports/*.xml'
         }
     }
 }
