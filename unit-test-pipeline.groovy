@@ -41,8 +41,16 @@ pipeline {
                         pwd
                         ls -l
 
-                        mvn clean package
+                        mvn clean package                        
+                    '''
+                }
+            }
+        }
 
+        stage('Build And Run') {
+            steps {
+                dir('boot-project') {
+                    sh '''
                         chmod +x build.sh
                         ./build.sh
 
