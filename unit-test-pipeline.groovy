@@ -21,14 +21,17 @@ pipeline {
                 docker {
                     reuseNode true
                     image 'maven:3-alpine'
-                    args '-v $HOME/.m2:/root/.m2 -u jenkins:jenkins'
+                    args '-v $HOME/.m2:/root/.m2 -u 0:0'
                 }
             }
 
             steps {
-                sh 'mkdir -p boot-project'
+                sh '''
+                    su jenkins
+                    mkdir -p boot-project
+                '''
                 dir('boot-project') {
-                    git branch: 'develop',
+                    git branch: 'master',
                     url: 'https://github.com/wissensalt/readable-mess-word'
 
                     sh '''
