@@ -28,7 +28,7 @@ pipeline {
             steps {
                 sh 'mkdir -p boot-project'
                 dir('boot-project') {
-                    git branch: 'master',
+                    git branch: 'develop',
                     url: 'https://github.com/wissensalt/readable-mess-word'
 
                     sh '''
@@ -41,7 +41,7 @@ pipeline {
             }
         }
 
-        stage ('Build') {
+        stage ('Build and Test') {
             environment {
                 VERSION_SUFFIX = versionSuffix()
                 VERSION_SUFFIX2 = versionSuffix2 rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
@@ -56,16 +56,13 @@ pipeline {
                         ls -l
 
                         chmod +x build.sh
-                        chmod +x run.sh                    
-
                         ./build.sh
-                        ./run.sh
                     '''
                 }
             }    
         }        
 
-        stage ('Test') {
+        stage ('Run') {
             agent {
                 docker {
                     reuseNode true
@@ -75,10 +72,12 @@ pipeline {
             }
             
             steps {
-                sh '''
-                    cd boot-project/readable-mess-word
-                    mvn test
-                '''
+                dir('boot-project') {
+                    sh '''                    
+                        chmod +x run.sh                    
+                        ./run.sh
+                    '''
+                }
 
                 mstest testResultFile:"**/*.trx", keepLongStdio: true
             }
