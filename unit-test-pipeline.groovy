@@ -32,10 +32,7 @@ pipeline {
 
             steps {
                 echo "Building version ${VERSION} with SUFFIX ${VERSION_SUFFIX}"
-
-                sh '''
-                    mkdir -p boot-project
-                '''
+                
                 dir('boot-project') {
                     git branch: 'master',
                     url: 'https://github.com/wissensalt/readable-mess-word'
