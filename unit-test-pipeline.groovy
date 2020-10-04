@@ -21,7 +21,7 @@ pipeline {
                 docker {
                     reuseNode true
                     image 'maven:3-alpine'
-                    args '-v $HOME/.m2:/root/.m2 -u 0:0'
+                    args '-v $HOME/.m2:/root/.m2 -u jenkins:jenkins'
                 }
             }
 
