@@ -16,7 +16,7 @@ pipeline {
             }
         }
 
-        stage ('Build and Run') {
+        stage ('Package') {
             environment {
                 VERSION_SUFFIX = versionSuffix()
                 VERSION_SUFFIX2 = versionSuffix2 rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
@@ -47,7 +47,7 @@ pipeline {
             }
         }
 
-        stage('Build And Run') {
+        stage('Build - Test - Run') {
             steps {
                 dir('boot-project') {
                     sh '''
