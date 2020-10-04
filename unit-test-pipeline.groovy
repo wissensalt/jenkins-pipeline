@@ -29,7 +29,6 @@ pipeline {
                 sh 'mkdir -p boot-project'
                 dir('boot-project') {
                     git branch: 'master',
-                    credentialsId: '4b2b3bb7-b857-49e5-96bb-583e77230828',
                     url: 'https://github.com/wissensalt/readable-mess-word'
 
                     sh '''
